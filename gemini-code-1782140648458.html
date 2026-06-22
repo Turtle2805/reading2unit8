@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giáo viên tạo: Ms Lê Hằng English</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Tự động tối ưu hóa bảng màu theo chủ đề Thiên nhiên/Nông thôn (Dynamic Countryside Theme) */
+            --primary-gradient: linear-gradient(-45deg, #A8E6CF, #DCEDC8, #FFD3B6, #FFAAA6);
+            --correct-color: #00D26A;
+            --wrong-color: #FF4757;
+            --main-dark: #2D3436;
+            --theme-color: #8854C0;
+            --btn-3d-shadow: 0 6px 0 #b2bec3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            background-size: 400% 400%;
+            animation: loangGradient 16s ease infinite;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--main-dark);
+            position: relative;
+        }
+
+        /* Lớp họa tiết SVG lơ lửng đại diện chủ đề Nông thôn/Thiên nhiên (🌾 Nông nghiệp, 🏡 Nhà cửa, 🐤 Gia cầm) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.15;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><text x='15' y='35' font-size='22'>🌾</text><text x='65' y='30' font-size='20'>🏡</text><text x='20' y='80' font-size='24'>🐤</text><text x='70' y='75' font-size='18'>🌳</text></svg>");
+        }
+
+        @keyframes loangGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* MAIN LAYOUT: SPLIT SCREEN */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Control Bar */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.92);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #E4E7EB;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .teacher-brand {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--theme-color);
+        }
+
+        .timer-zone {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-timer {
+            background: #FF9F43;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            font-weight: 900;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #D35400;
+        }
+        .btn-timer:active { transform: translateY(2px); box-shadow: 0 1px 0 #D35400; }
+
+        .time-display {
+            font-size: 1.2rem;
+            font-weight: 900;
+            background: #2D3436;
+            color: #00FF66;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        /* Split Workspace */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Column: Reading Passage */
+        .reading-pane {
+            width: 50%;
+            padding: 25px;
+            overflow-y: auto;
+            border-right: 4px solid #DFE6E9;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Right Column: Exercises */
+        .exercises-pane {
+            width: 50%;
+            padding: 25px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ELEMENTS STYLE */
+        .passage-block {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.05);
+            border: 2px solid #E4E7EB;
+        }
+
+        .passage-title {
+            color: #2D3436;
+            font-weight: 900;
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .passage-text {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            text-align: justify;
+            font-weight: 400;
+        }
+
+        .btn-translate {
+            background: #00C9A7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 12px;
+            margin-top: 12px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #00A88F;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-translate:active { transform: translateY(2px); box-shadow: 0 1px 0 #00A88F; }
+
+        .translation-box {
+            display: none;
+            margin-top: 12px;
+            padding: 12px;
+            background: #F5F7FA;
+            border-radius: 12px;
+            border-left: 4px solid #00C9A7;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #485460;
+            font-style: italic;
+        }
+
+        /* Glossary Table */
+        .glossary-title {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #D35400;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+        .glossary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #E4E7EB;
+        }
+        .glossary-table th, .glossary-table td {
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #E4E7EB;
+        }
+        .glossary-table th {
+            background: #FFEAA7;
+            color: #D35400;
+            font-weight: 900;
+        }
+
+        /* EXERCISE CARD STYLE */
+        .section-header {
+            background: var(--theme-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 0 #6C3483;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 0 #DFE6E9;
+            border: 2px solid #E4E7EB;
+        }
+
+        .question-text {
+            font-size: 1rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #E4E7EB;
+            border-radius: 15px;
+            padding: 12px 18px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--btn-3d-shadow);
+            transition: all 0.1s ease;
+        }
+        .option-btn:hover {
+            transform: scale(1.01);
+            background: #F8F9FA;
+        }
+        .option-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b2bec3;
+        }
+
+        /* States color code */
+        .option-btn.correct, .gap-fill-trigger.correct {
+            background: var(--correct-color) !important;
+            color: white !important;
+            border-color: #00B359 !important;
+            box-shadow: 0 3px 0 #00994C !important;
+        }
+        .option-btn.wrong {
+            background: var(--wrong-color) !important;
+            color: white !important;
+            border-color: #E63946 !important;
+            box-shadow: 0 3px 0 #CC2E3A !important;
+            animation: rungLac 0.4s ease;
+        }
+
+        @keyframes rungLac {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        /* Gap fill design inline */
+        .gap-fill-trigger {
+            background: #FFEAA7;
+            color: #D35400;
+            font-weight: 900;
+            padding: 2px 12px;
+            border-radius: 8px;
+            border: 1px dashed #E1B12C;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        /* Explanation Academic Block */
+        .explanation-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #F5F7FA;
+            border-radius: 15px;
+            border-left: 5px solid var(--theme-color);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        .explanation-box h5 {
+            color: var(--theme-color);
+            font-weight: 900;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        /* Graphic UI Mockup CSS */
+        .css-sign {
+            background: #FFD200;
+            border: 4px solid black;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 900;
+            color: black;
+            text-align: center;
+            max-width: 250px;
+            margin: 10px 0;
+            box-shadow: 0 4px 0 #B39200;
+        }
+        .css-phone {
+            background: #E5E5EA;
+            border: 2px solid #C7C7CC;
+            border-radius: 18px;
+            padding: 10px;
+            max-width: 260px;
+            margin: 10px 0;
+        }
+        .css-bubble {
+            background: #007AFF;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* Footer Submit bar */
+        .footer-action {
+            text-align: center;
+            padding: 20px 0 40px 0;
+        }
+        .btn-submit-all {
+            background: #FF4757;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #C53240;
+        }
+        .btn-submit-all:active { transform: translateY(3px); box-shadow: 0 2px 0 #C53240; }
+
+        /* MODAL REPORT OUTCOME */
+        .modal-mask {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal-mask.show { opacity: 1; pointer-events: auto; }
+        .modal-board {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            width: 90%; max-width: 450px;
+            text-align: center;
+            border: 4px solid #FDCB6E;
+        }
+        .modal-board h3 { font-size: 1.5rem; font-weight: 900; margin-bottom: 10px; }
+        .score-num { font-size: 3.5rem; font-weight: 900; color: var(--theme-color); margin: 10px 0; }
+        .comment-text { font-size: 1.05rem; font-weight: 700; margin-bottom: 20px; line-height: 1.4; }
+        .btn-retry { background: #00C9A7; color: white; border: none; padding: 10px 24px; font-weight: 900; border-radius: 12px; cursor: pointer; }
+
+        #confetti-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-layer"></canvas>
+
+    <div class="app-container">
+        <!-- TOP CONTROL BAR -->
+        <div class="top-bar">
+            <div class="teacher-brand">📚 Giáo viên tạo: Ms Lê Hằng English</div>
+            <div class="timer-zone">
+                <button class="btn-timer" id="timer-toggle-btn" onclick="toggleTimer()">BẮT ĐẦU TÍNH GIỜ LÀM BÀI</button>
+                <div class="time-display" id="time-clock">10:00</div>
+            </div>
+        </div>
+
+        <!-- WORKSPACE: SPLIT APP -->
+        <div class="workspace">
+            
+            <!-- LEFT PANEL: READING PASSAGES -->
+            <div class="reading-pane">
+                
+                <!-- PASSAGE 18 -->
+                <div class="passage-block">
+                    <div class="passage-title">🌿 Exercise 18: Reading Context</div>
+                    <div class="passage-text">
+                        Living in the countryside brings us many benefits. First of all, the environment in the countryside is less polluted than in the city. You can enjoy fresh air, clean rivers, and peaceful life there. Second, there are no traffic jams because the main vehicles are bikes, electric motorbikes or walking. Besides, everything in the countryside is cheaper and healthier than in the city. Farmers often grow clean vegetables in their gardens. They also raise poultry and pigs for meat. It is great to live in the countryside.
+                    </div>
+                    <button class="btn-translate" onclick="toggleTranslation(18)">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box" id="trans-18">
+                        Sống ở nông thôn mang lại cho chúng ta nhiều lợi ích. Trước hết, môi trường ở nông thôn ít bị ô nhiễm hơn ở thành phố. Bạn có thể tận hưởng không khí trong lành, những dòng sông sạch và cuộc sống yên bình ở đó. Thứ hai, không có kẹt xe vì các phương tiện chính là xe đạp, xe máy điện hoặc đi bộ. Ngoài ra, mọi thứ ở nông thôn đều rẻ hơn và lành mạnh hơn ở thành phố. Nông dân thường trồng rau sạch trong vườn của họ. Họ cũng nuôi gia cầm và lợn để lấy thịt. Thật tuyệt vời khi được sống ở vùng nông thôn.
+                    </div>
+                    
+                    <div class="glossary-title">📖 Glossary (Bảng từ vựng học thuật)</div>
+                    <table class="glossary-table">
+                        <thead>
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Benefits</td><td>(n)</td><td>Lợi ích, phúc lợi</td></tr>
+                            <tr><td>Environment</td><td>(n)</td><td>Môi trường sống</td></tr>
+                            <tr><td>Polluted</td><td>(adj)</td><td>Bị ô nhiễm</td></tr>
+                            <tr><td>Peaceful</td><td>(adj)</td><td>Yên bình, thanh bình</td></tr>
+                            <tr><td>Vehicles</td><td>(n)</td><td>Phương tiện giao thông</td></tr>
+                            <tr><td>Electric</td><td>(adj)</td><td>Thuộc về điện, chạy bằng điện</td></tr>
+                            <tr><td>Cheaper</td><td>(adj-comp)</td><td>Rẻ hơn</td></tr>
+                            <tr><td>Healthier</td><td>(adj-comp)</td><td>Lành mạnh hơn, khỏe mạnh hơn</td></tr>
+                            <tr><td>Gardens</td><td>(n)</td><td>Khu vườn</td></tr>
+                            <tr><td>Raise</td><td>(v)</td><td>Chăn nuôi, nuôi nấng</td></tr>
+                            <tr><td>Poultry</td><td>(n)</td><td>Gia cầm (gà, vịt, ngan...)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PASSAGE 19 - SECTION 1 -->
+                <div class="passage-block">
+                    <div class="passage-title">🇻🇳 Exercise 19 - Passage ❶</div>
+                    <div class="passage-text">
+                        Viet Nam is famous for its countryside and traditional village life. In a Vietnamese village, people live closer to nature and are more self-sufficient. They grow their own vegetables and raise their own animals. There are also many rice fields where farmers work hard to produce the staple food of the country.<br><br>
+                        In the village, people are more connected to their community. They often help each other with tasks like farming, building homes, and cooking. There are also many festivals throughout the year where people come together to celebrate and share food.<br><br>
+                        Despite the many benefits of village life, there are also some challenges. Access to healthcare and education can be limited. Many young people also leave the village to find work in the city, which can lead to a decline in the population.<br><br>
+                        Overall, life in a Vietnamese village is simple and traditional, but also has its challenges. However, many people continue to cherish and preserve this way of life.
+                    </div>
+                    <button class="btn-translate" onclick="toggleTranslation('19-1')">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box" id="trans-19-1">
+                        Việt Nam nổi tiếng với vùng nông thôn và cuộc sống làng quê truyền thống. Ở một ngôi làng Việt Nam, người dân sống gần gũi với thiên nhiên hơn và tự cung tự cấp nhiều hơn. Họ tự trồng rau và nuôi động vật của riêng mình. Ngoài ra còn có nhiều cánh đồng lúa nơi những người nông dân làm việc chăm chỉ để sản xuất ra lương thực chủ yếu của đất nước.<br><br>
+                        Trong làng, mọi người gắn kết hơn với cộng đồng của họ. Họ thường giúp đỡ nhau trong các công việc như làm ruộng, xây nhà và nấu nướng. Ngoài ra còn có nhiều lễ hội trong suốt cả năm để mọi người cùng nhau ăn mừng và chia sẻ đồ ăn.<br><br>
+                        Mặc dù cuộc sống làng quê có nhiều lợi ích nhưng cũng có những thách thức. Việc tiếp cận y tế và giáo dục có thể bị hạn chế. Nhiều người trẻ cũng rời làng để tìm việc làm ở thành phố, điều này có thể dẫn đến sự suy giảm dân số.<br><br>
+                        Nhìn chung, cuộc sống ở một ngôi làng Việt Nam đơn giản và truyền thống nhưng cũng có những thách thức. Tuy nhiên, nhiều người vẫn tiếp tục trân trọng và giữ gìn lối sống này.
+                    </div>
+                    
+                    <div class="glossary-title">📖 Glossary (Bảng từ vựng học thuật)</div>
+                    <table class="glossary-table">
+                        <thead>
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Traditional</td><td>(adj)</td><td>Thuộc về truyền thống</td></tr>
+                            <tr><td>Self-sufficient</td><td>(adj)</td><td>Tự cung tự cấp, tự lực cánh sinh</td></tr>
+                            <tr><td>Staple food</td><td>(n)</td><td>Lương thực chủ yếu, thực phẩm cơ bản</td></tr>
+                            <tr><td>Connected</td><td>(adj)</td><td>Gắn kết, kết nối</td></tr>
+                            <tr><td>Community</td><td>(n)</td><td>Cộng đồng</td></tr>
+                            <tr><td>Celebrate</td><td>(v)</td><td>Ăn mừng, làm lễ kỷ niệm</td></tr>
+                            <tr><td>Healthcare</td><td>(n)</td><td>Chăm sóc y tế, chăm sóc sức khỏe</td></tr>
+                            <tr><td>Limited</td><td>(adj)</td><td>Bị hạn chế, có giới hạn</td></tr>
+                            <tr><td>Decline</td><td>(n/v)</td><td>Sự sụt giảm, suy giảm</td></tr>
+                            <tr><td>Cherish</td><td>(v)</td><td>Trân trọng, yêu thương sâu sắc</td></tr>
+                            <tr><td>Preserve</td><td>(v)</td><td>Bảo tồn, giữ gìn</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PASSAGE 19 - SECTION 2 -->
+                <div class="passage-block">
+                    <div class="passage-title">🏝️ Exercise 19 - Passage ❷</div>
+                    <div class="passage-text">
+                        Last summer, Long went on a holiday for two weeks to the island of Cat Ba. He rented a hotel which had a wonderful swimming pool and beautiful views of the sea. It was in a village where the local people went fishing in the winter, and foreign visitors came in the summer.<br><br>
+                        Long spent his first day on the beach, but on the second day he felt very ill. First, he was too hot, then he was too cold. He couldn't understand why he felt like that. So he went to see the local doctor, who was a very nice man, and whose voice was so sweet.<br><br>
+                        "Summer is a time when people often feel ill," the doctor said. "It's too hot for most of us! Take this medicine, and stay out of the sun." Long took the doctor's advice and stayed in his room for the rest of his holiday. He soon felt better. "What a cheap holiday!" he thought happily.
+                    </div>
+                    <button class="btn-translate" onclick="toggleTranslation('19-2')">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box" id="trans-19-2">
+                        Mùa hè năm ngoái, Long đã đi nghỉ hai tuần tại đảo Cát Bà. Cậu ấy đã thuê một khách sạn có hồ bơi tuyệt vời và tầm nhìn ra biển rất đẹp. Nó nằm trong một ngôi làng nơi người dân địa phương thường đi đánh cá vào mùa đông, còn du khách nước ngoài đến vào mùa hè.<br><br>
+                        Long dành ngày đầu tiên trên bãi biển, nhưng đến ngày thứ hai cậu ấy cảm thấy rất mệt. Đầu tiên, cậu thấy quá nóng, sau đó lại thấy quá lạnh. Cậu không thể hiểu tại sao mình lại cảm thấy như thế. Vì vậy, cậu đã đi khám bác sĩ địa phương, đó là một người đàn ông rất tử tế và có giọng nói rất ngọt ngào.<br><br>
+                        "Mùa hè là thời điểm mọi người thường đổ bệnh," bác sĩ nói. "Thời tiết quá nóng đối với hầu hết chúng ta! Hãy uống liều thuốc này và tránh xa ánh nắng mặt trời." Long đã nghe theo lời khuyên của bác sĩ và ở trong phòng suốt thời gian còn lại của kỳ nghỉ. Cậu sớm cảm thấy khỏe hơn. "Thật là một kỳ nghỉ rẻ tiền!" cậu nghĩ một cách vui vẻ.
+                    </div>
+                    
+                    <div class="glossary-title">📖 Glossary (Bảng từ vựng học thuật)</div>
+                    <table class="glossary-table">
+                        <thead>
+                            <tr><th>Từ vựng</th><th>Loại từ</th><th>Nghĩa tiếng Việt</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Holiday</td><td>(n)</td><td>Kỳ nghỉ, ngày lễ</td></tr>
+                            <tr><td>Rented</td><td>(v-past)</td><td>Đã thuê (nhà, phòng, xe...)</td></tr>
+                            <tr><td>Wonderful</td><td>(adj)</td><td>Tuyệt vời, kỳ diệu</td></tr>
+                            <tr><td>Foreign</td><td>(adj)</td><td>Thuộc về nước ngoài</td></tr>
+                            <tr><td>Understand</td><td>(v)</td><td>Hiểu, thấu hiểu</td></tr>
+                            <tr><td>Voice</td><td>(n)</td><td>Giọng nói, tiếng nói</td></tr>
+                            <tr><td>Sweet</td><td>(adj)</td><td>Ngọt ngào, dịu dàng</td></tr>
+                            <tr><td>Medicine</td><td>(n)</td><td>Thuốc chữa bệnh</td></tr>
+                            <tr><td>Advice</td><td>(n)</td><td>Lời khuyên, sự chỉ bảo</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PASSAGE 22 - SECTION 1 -->
+                <div class="passage-block">
+                    <div class="passage-title">📊 Exercise 22 - Passage ❶</div>
+                    <div class="passage-text">
+                        Living in the country is something that people from the city often dream about. However, in reality, it has both advantages and disadvantages.<br><br>
+                        There are certainly many advantages to living in the country. First, you can enjoy peace and quietness. Moreover, people tend to be friendlier. A further advantage is that there is less traffic, so it is safer for young children.<br><br>
+                        However, there are certain disadvantages or <b>drawbacks</b> to life outside the city. First, because there are fewer people, you are likely to have few friends. In addition, entertainment is difficult to find, particularly in the evening. Furthermore, the fact that there are fewer shops and services means that it is hard to find jobs.<br><br>
+                        In short, it can be seen that the country is more suitable for some people than others. On the whole, <b>it</b> is often the best for those who are retired or who have young children. In contrast, young people who have a career are better provided in the city.
+                    </div>
+                    <button class="btn-translate" onclick="toggleTranslation('22-1')">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box" id="trans-22-1">
+                        Sống ở nông thôn là điều mà người dân thành phố thường mơ ước. Tuy nhiên, trong thực tế, nó có cả những ưu điểm lẫn nhược điểm.<br><br>
+                        Chắc chắn có rất nhiều lợi ích khi sống ở nông thôn. Đầu tiên, bạn có thể tận hưởng sự yên bình và tĩnh lặng. Hơn nữa, mọi người có xu hướng thân thiện hơn. Một ưu điểm khác là ít giao thông hơn nên an toàn hơn cho trẻ nhỏ.<br><br>
+                        Tuy nhiên, có một số bất lợi hoặc hạn chế đối với cuộc sống bên ngoài thành phố. Thứ nhất, vì có ít người hơn nên bạn có khả năng có ít bạn bè hơn. Ngoài ra, giải trí rất khó tìm, đặc biệt là vào buổi tối. Hơn nữa, thực tế là có ít cửa hàng và dịch vụ đồng nghĩa với việc khó tìm được việc làm.<br><br>
+                        Nói tóm lại, có thể thấy rằng nông thôn phù hợp với một số người hơn những người khác. Nhìn chung, nó thường là tốt nhất cho những người đã nghỉ hưu hoặc những người có con nhỏ. Ngược lại, những người trẻ tuổi có sự nghiệp được đáp ứng tốt hơn ở thành phố.
+                    </div>
+                </div>
+
+                <!-- PASSAGE 22 - SECTION 2 -->
+                <div class="passage-block">
+                    <div class="passage-title">🗺️ Exercise 22 - Passage ❷</div>
+                    <div class="passage-text">
+                        With the habit of working in teams and being helpful to one other, villagers usually earn their living from farming, raising livestock and making handicrafts. <b>They</b> live in a small community with a temple or a communal cultural house where great events, such as festivals worshipping the village god and traditional games are organized. Villagers in the South usually live in houses lined up along the central road and built on stilts to keep above flood waters. Along the coastal lines, fishermen depend on the sea as a means of livelihood. In the Central of Vietnam, a place suffering lots of natural disasters all the year round, citizens tend to be more studious and hard-working than those in regions with favourable conditions. People in the central highlands and the northern mountains live by growing rice, rubber trees, coffee and tea as well as hunting.
+                    </div>
+                    <button class="btn-translate" onclick="toggleTranslation('22-2')">Mở dịch đoạn này 🌟</button>
+                    <div class="translation-box" id="trans-22-2">
+                        Với thói quen làm việc theo nhóm và giúp đỡ lẫn nhau, dân làng thường kiếm sống bằng nghề nông, chăn nuôi gia súc và làm đồ thủ công mỹ nghệ. Họ sống trong một cộng đồng nhỏ có đình làng hoặc nhà văn hóa chung, nơi tổ chức các sự kiện lớn như lễ hội thờ thành hoàng làng và các trò chơi truyền thống. Dân làng ở miền Nam thường sống trong những ngôi nhà xếp thành hàng dọc theo trục đường chính và được xây trên hệ thống cột sàn (nhà sàn) để tránh dòng nước lũ. Dọc theo các đường bờ biển, ngư dân phụ thuộc vào biển như một phương tiện kiếm sống. Ở miền Trung Việt Nam, nơi chịu nhiều thiên tai quanh năm, người dân có xu hướng hiếu học và chăm chỉ hơn những vùng có điều kiện thuận lợi. Người dân ở Tây Nguyên và miền núi phía Bắc sống bằng nghề trồng lúa, cao su, cà phê, chè cũng như săn bắn.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT PANEL: QUESTIONS AND EXERCISES -->
+            <div class="exercises-pane">
+                <div id="dynamic-exercise-root"></div>
+                
+                <div class="footer-action">
+                    <button class="btn-submit-all" onclick="processGrading()">🎉 NỘP BÀI KIỂM TRA TỔNG KẾT 🎉</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- OUTCOME REPORT DIALOG -->
+    <div class="modal-mask" id="result-modal">
+        <div class="modal-board">
+            <h3>📊 BẢNG VÀNG THÀNH TÍCH 📊</h3>
+            <div class="score-num" id="display-final-score">0 / 0</div>
+            <div class="comment-text" id="display-final-comment">Cố lên con nhé!</div>
+            <button class="btn-retry" onclick="resetEntireExam()">Làm Lại Bài Thi Đố Vui 🔁</button>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG AUDIO CONTEXT
+        const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function emitSound(kind) {
+            const osc = AudioCtx.createOscillator();
+            const amp = AudioCtx.createGain();
+            osc.connect(amp);
+            amp.connect(AudioCtx.destination);
+            if (kind === 'win') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, AudioCtx.currentTime); // D5
+                osc.frequency.setValueAtTime(880, AudioCtx.currentTime + 0.12); // A5
+                amp.gain.setValueAtTime(0.2, AudioCtx.currentTime);
+                amp.gain.exponentialRampToValueAtTime(0.01, AudioCtx.currentTime + 0.35);
+                osc.start(); osc.stop(AudioCtx.currentTime + 0.35);
+            } else {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, AudioCtx.currentTime); // A3
+                osc.frequency.linearRampToValueAtTime(110, AudioCtx.currentTime + 0.28);
+                amp.gain.setValueAtTime(0.25, AudioCtx.currentTime);
+                amp.gain.exponentialRampToValueAtTime(0.01, AudioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(AudioCtx.currentTime + 0.3);
+            }
+        }
+
+        // TIMER STATE LOGIC
+        let countdownSec = 600; 
+        let clockTimer = null;
+        let isClockRunning = false;
+
+        function toggleTimer() {
+            const btn = document.getElementById('timer-toggle-btn');
+            if (!isClockRunning) {
+                isClockRunning = true;
+                btn.innerText = "TẠM DỪNG ĐỒNG HỒ";
+                btn.style.background = "#FF4757";
+                btn.style.boxShadow = "0 3px 0 #C53240";
+                clockTimer = setInterval(() => {
+                    countdownSec--;
+                    renderTime();
+                    if (countdownSec <= 0) {
+                        clearInterval(clockTimer);
+                        isClockRunning = false;
+                        alert("Đã hết giờ làm bài. Bạn vẫn có thể tiếp tục làm, nhưng nhớ là trong phòng thi thật, bạn chỉ nên làm một bài như thế này trong 10 phút thôi nha.");
+                        btn.innerText = "BẮT ĐẦU TÍNH GIỜ LÀM BÀI";
+                        btn.style.background = "#00C9A7";
+                    }
+                }, 1000);
+            } else {
+                isClockRunning = false;
+                clearInterval(clockTimer);
+                btn.innerText = "TIẾP TỤC LÀM BÀI";
+                btn.style.background = "#FF9F43";
+                btn.style.boxShadow = "0 3px 0 #D35400";
+            }
+        }
+
+        function renderTime() {
+            const m = Math.floor(countdownSec / 60);
+            const s = countdownSec % 60;
+            document.getElementById('time-clock').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+
+        function toggleTranslation(id) {
+            const box = document.getElementById(`trans-${id}`);
+            box.style.display = (box.style.display === "block") ? "none" : "block";
+        }
+
+        // DATABASE QUESTION EXERCISES (100% TOÀN VẸN DỮ LIỆU)
+        const exerciseData = [
+            {
+                uid: "ex18_q1",
+                blockTitle: "Exercise 18: Read and choose the correct words to complete the passage.",
+                style: "gapfill",
+                promptText: "Living in the countryside brings us many benefits. First of all, the (1) ........... in the countryside is less polluted than in the city.",
+                choices: ["environment", "cheaper", "gardens", "peaceful", "vehicles", "raise"],
+                solution: "environment",
+                explanation: {
+                    intro: "Dịch nghĩa: 'Trước hết, (1) môi trường ở nông thôn ít bị ô nhiễm hơn ở thành phố.'",
+                    optionsAnalysis: "Phân tích từ vựng:<br>- environment (n): môi trường<br>- cheaper (adj): rẻ hơn<br>- gardens (n): những khu vườn<br>- peaceful (adj): yên bình",
+                    matchReason: "Dựa vào từ khóa đứng sau 'less polluted' (ít bị ô nhiễm hơn) -> Chỉ có danh từ 'environment' là phù hợp về mặt ý nghĩa ngữ cảnh.",
+                    failReason: "Các từ còn lại như 'cheaper' (tính từ) hay 'vehicles' không thể bị đi kèm tính từ ô nhiễm trong văn cảnh này."
+                }
+            },
+            {
+                uid: "ex18_q2",
+                blockTitle: "Exercise 18: Read and choose the correct words to complete the passage.",
+                style: "gapfill",
+                promptText: "You can enjoy fresh air, clean rivers, and (2) ........... life there.",
+                choices: ["environment", "cheaper", "gardens", "peaceful", "vehicles", "raise"],
+                solution: "peaceful",
+                explanation: {
+                    intro: "Dịch nghĩa: 'Bạn có thể tận hưởng không khí trong lành, những dòng sông sạch, và cuộc sống (2) yên bình ở đó.'",
+                    optionsAnalysis: "Phân tích từ vựng:<br>- peaceful (adj): yên bình, thanh bình.<br>- raise (v): chăn nuôi.",
+                    matchReason: "Cần một tính từ bổ nghĩa cho danh từ 'life' để mô tả đặc trưng nông thôn. 'peaceful life' là một collocation rất phổ biến mang nghĩa cuộc sống yên bình.",
+                    failReason: "Các từ khác sai loại từ hoặc sai hoàn toàn về ngữ nghĩa khi ghép với 'life'."
+                }
+            },
+            {
+                uid: "ex18_q3",
+                blockTitle: "Exercise 18: Read and choose the correct words to complete the passage.",
+                style: "gapfill",
+                promptText: "Second, there are no traffic jams because the main (3) ........... are bikes, electric motorbikes or walking.",
+                choices: ["environment", "cheaper", "gardens", "peaceful", "vehicles", "raise"],
+                solution: "vehicles",
+                explanation: {
+                    intro: "Dịch nghĩa: 'Thứ hai, không có kẹt xe vì các (3) phương tiện chính là xe đạp, xe máy điện hoặc đi bộ.'",
+                    optionsAnalysis: "Phân tích từ vựng:<br>- vehicles (n số nhiều): các phương tiện giao thông.",
+                    matchReason: "Vế sau liệt kê 'bikes' (xe đạp), 'electric motorbikes' (xe máy điện) -> Đây đều là các phương tiện giao thông, do đó ta chọn danh từ 'vehicles'.",
+                    failReason: "Các đáp án khác không chỉ loại công cụ di chuyển nên bị loại bỏ."
+                }
+            },
+            {
+                uid: "ex18_q4",
+                blockTitle: "Exercise 18: Read and choose the correct words to complete the passage.",
+                style: "gapfill",
+                promptText: "Besides, everything in the countryside is (4) ........... and healthier than in the city.",
+                choices: ["environment", "cheaper", "gardens", "peaceful", "vehicles", "raise"],
+                solution: "cheaper",
+                explanation: {
+                    intro: "Dịch nghĩa: 'Ngoài ra, mọi thứ ở nông thôn đều (4) rẻ hơn và lành mạnh hơn ở thành phố.'",
+                    optionsAnalysis: "Phân tích từ vựng:<br>- cheaper (adj so sánh hơn): rẻ hơn.",
+                    matchReason: "Cấu trúc so sánh hơn song hành kết nối bằng chữ 'and': '... is [adj-er] and healthier than...'. Xét về thực tế đời sống nông thôn, chi phí sinh hoạt sẽ rẻ hơn thành phố.",
+                    failReason: "Các danh từ và động từ khác không phù hợp cấu trúc ngữ pháp song hành này."
+                }
+            },
+            {
+                uid: "ex18_q5",
+                blockTitle: "Exercise 18: Read and choose the correct words to complete the passage.",
+                style: "gapfill",
+                promptText: "Farmers often grow clean vegetables in their (5) ........... .",
+                choices: ["environment", "cheaper", "gardens", "peaceful", "vehicles", "raise"],
+                solution: "gardens",
+                explanation: {
+                    intro: "Dịch nghĩa: 'Người nông dân thường trồng rau sạch trong (5) vườn của họ.'",
+                    optionsAnalysis: "Phân tích từ vựng:<br>- gardens (n số nhiều): những khu vườn.",
+                    matchReason: "Hành động 'grow clean vegetables' (trồng rau sạch) của nông dân thì địa điểm hợp lý nhất trong các từ là 'gardens' (trong vườn).",
+                    failReason: "Không thể trồng rau trên các phương tiện (vehicles) hay trên môi trường tổng quát."
+                }
+            },
+            {
+                uid: "ex18_q6",
+                blockTitle: "Exercise 18: Read and choose the correct words to complete the passage.",
+                style: "gapfill",
+                promptText: "They also (6) ........... poultry and pigs for meat. It is great to live in the countryside.",
+                choices: ["environment", "cheaper", "gardens", "peaceful", "vehicles", "raise"],
+                solution: "raise",
+                explanation: {
+                    intro: "Dịch nghĩa: 'Họ cũng (6) chăn nuôi gia cầm và lợn để lấy thịt.'",
+                    optionsAnalysis: "Phân tích từ vựng:<br>- raise (v): nuôi, chăn nuôi động vật.",
+                    matchReason: "Vị trí cần một động từ nguyên thể đứng sau chủ ngữ 'They'. Động từ 'raise' đi với danh từ chỉ gia súc, gia cầm 'poultry and pigs' mang nghĩa chăn nuôi.",
+                    failReason: "Các từ khác không phải là động từ hành động chăn nuôi phù hợp ngữ pháp."
+                }
+            },
+            // EX 19 - PASSAGE 1
+            {
+                uid: "ex19_1_q1",
+                blockTitle: "Exercise 19 - Passage ❶: Multiple Choice",
+                style: "abcd",
+                promptText: "In a Vietnamese village, people live (1)_______ to nature and are more self-sufficient.",
+                choices: ["A. closer", "B. closest", "C. more close", "D. as close"],
+                solution: "A. closer",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Trong một ngôi làng Việt Nam, người dân sống gần gũi với thiên nhiên hơn...'",
+                    optionsAnalysis: "Phân tích:<br>A. closer: gần hơn (so sánh hơn)<br>B. closest: gần nhất<br>C. more close: Sai ngữ pháp (close là tính từ ngắn).",
+                    matchReason: "Cấu trúc câu mang tính chất so sánh ngầm với cuộc sống thành thị ở ngữ cảnh bài đọc (hoặc đi kèm trạng thái biến đổi 'closer and closer'), diễn đạt mức độ gần gũi hơn với tự nhiên.",
+                    failReason: "Loại B vì không có mạo từ 'the' cho so sánh nhất. Loại C sai dạng từ."
+                }
+            },
+            {
+                uid: "ex19_1_q2",
+                blockTitle: "Exercise 19 - Passage ❶: Multiple Choice",
+                style: "abcd",
+                promptText: "There are also (2)_______ rice fields where farmers work hard to produce the staple food...",
+                choices: ["A. much", "B. little", "C. many", "D. lots"],
+                solution: "C. many",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Cũng có nhiều cánh đồng lúa nơi người nông dân làm việc chăm chỉ...'",
+                    optionsAnalysis: "Phân tích:<br>A. much + danh từ không đếm được.<br>B. little + danh từ không đếm được.<br>C. many + danh từ đếm được số nhiều.<br>D. lots: phải đi với 'of' mới cộng danh từ.",
+                    matchReason: "Từ 'rice fields' là danh từ đếm được số nhiều, câu mang ý khẳng định tích cực về sự trù phú nên ta chọn 'many'.",
+                    failReason: "Much/Little sai ngữ pháp loại danh từ. Lots thiếu 'of'."
+                }
+            },
+            {
+                uid: "ex19_1_q3",
+                blockTitle: "Exercise 19 - Passage ❶: Multiple Choice",
+                style: "abcd",
+                promptText: "They often help each other (3)_______ tasks like farming, building homes, and cooking.",
+                choices: ["A. on", "B. at", "C. by", "D. with"],
+                solution: "D. with",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Họ thường giúp đỡ lẫn nhau với/trong các công việc như làm nông, xây nhà...'",
+                    optionsAnalysis: "Cấu trúc đi với giới từ phổ biến của động từ Help:<br>Help somebody WITH something: Giúp đỡ ai việc gì đó.",
+                    matchReason: "Do có cấu trúc cố định 'help each other with tasks' nên giới từ 'with' là lựa chọn chính xác duy nhất.",
+                    failReason: "Các giới từ on, at, by không tạo thành cụm từ đúng ngữ pháp với ngữ cảnh giúp đỡ việc gì."
+                }
+            },
+            {
+                uid: "ex19_1_q4",
+                blockTitle: "Exercise 19 - Passage ❶: Multiple Choice",
+                style: "abcd",
+                promptText: "There are also many festivals throughout the year where people come together to (4)_______ and share food.",
+                choices: ["A. celebrate", "B. train", "C. surround", "D. combine"],
+                solution: "A. celebrate",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Cũng có rất nhiều lễ hội suốt cả năm nơi mọi người tụ họp để ăn mừng và chia sẻ đồ ăn.'",
+                    optionsAnalysis: "Ý nghĩa từ vựng:<br>A. celebrate (v): tổ chức ăn mừng, lễ bái.<br>B. train (v): tập luyện.<br>C. surround (v): bao quanh.",
+                    matchReason: "Từ khóa 'festivals' (lễ hội) liên quan mật thiết đến hành động 'celebrate' (ăn mừng, kỷ niệm vui chơi).",
+                    failReason: "Các từ khác không hợp logic hành vi tại một lễ hội truyền thống."
+                }
+            },
+            {
+                uid: "ex19_1_q5",
+                blockTitle: "Exercise 19 - Passage ❶: Multiple Choice",
+                style: "abcd",
+                promptText: "Despite the many benefits of village life, there are also some (5)_______.",
+                choices: ["A. happiness", "B. advantages", "C. challenges", "D. benefits"],
+                solution: "C. challenges",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Mặc dù cuộc sống làng quê có nhiều lợi ích, nhưng cũng tồn tại một số thử thách.'",
+                    optionsAnalysis: "Từ vựng:<br>A. happiness (n): niềm hạnh phúc.<br>B. advantages (n): lợi thế.<br>C. challenges (n): những thử thách, khó khăn.",
+                    matchReason: "Từ nối tương phản 'Despite' (Mặc dù) ở đầu câu cho thấy vế sau phải nói về mặt tiêu cực đối lập với 'benefits' (lợi ích). Phía sau kể ra y tế và giáo dục bị giới hạn -> Đó là những 'challenges'.",
+                    failReason: "Lựa chọn A, B, D đều mang nghĩa tích cực, làm đảo lộn logic tương phản của câu."
+                }
+            },
+            {
+                uid: "ex19_1_q6",
+                blockTitle: "Exercise 19 - Passage ❶: Multiple Choice",
+                style: "abcd",
+                promptText: "Overall, life in a Vietnamese village is simple and traditional... (6)_______, many people continue to cherish and preserve this way of life.",
+                choices: ["A. Because", "B. Moreover", "C. Despite", "D. However"],
+                solution: "D. However",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Nhìn chung cuộc sống làng quê có những khó khăn. Tuy nhiên, nhiều người vẫn tiếp tục trân trọng...'",
+                    optionsAnalysis: "Trạng từ liên kết:<br>A. Because: Bởi vì (sau đó cộng mệnh đề liền mạch).<br>B. Moreover: Hơn nữa (thêm ý thuận).<br>C. Despite: Mặc dù (sau đó cộng danh từ/V-ing).<br>D. However: Tuy nhiên (đứng đầu câu, ngăn cách bằng dấu phẩy để chỉ sự tương phản giữa 2 câu).",
+                    matchReason: "Câu trước nói về 'challenges' (khó khăn), câu sau nói về việc 'cherish' (trân trọng giữ gìn) -> Hai xu hướng đối lập nhau. Vị trí đứng đầu câu trước dấu phẩy gọi tên trạng từ 'However'.",
+                    failReason: "Các liên từ khác sai cấu trúc ngữ pháp hiển thị dấu phẩy hoặc sai hướng logic liên kết."
+                }
+            },
+            // EX 19 - PASSAGE 2
+            {
+                uid: "ex19_2_q1",
+                blockTitle: "Exercise 19 - Passage ❷: Multiple Choice",
+                style: "abcd",
+                promptText: "Last summer, Long went (1)________ a holiday for two weeks to the island of Cat Ba.",
+                choices: ["A. to", "B. for", "C. on", "D. in"],
+                solution: "C. on",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Mùa hè năm ngoái, Long đã đi nghỉ mát trong hai tuần tại đảo Cát Bà.'",
+                    optionsAnalysis: "Cụm từ cố định (Collocation):<br>GO ON A HOLIDAY: Đi nghỉ mát, đi du lịch nghỉ dưỡng.",
+                    matchReason: "Do quy tắc cụm từ đi liền với danh từ 'holiday' bắt buộc phải dùng giới từ 'on'.",
+                    failReason: "Các giới từ to, for, in không đi kèm cấu trúc hành động này."
+                }
+            },
+            {
+                uid: "ex19_2_q2",
+                blockTitle: "Exercise 19 - Passage ❷: Multiple Choice",
+                style: "abcd",
+                promptText: "He (2)______ a hotel which had a wonderful swimming pool...",
+                choices: ["A. lived", "B. rented", "C. hired", "D. stayed"],
+                solution: "B. rented",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Cậu ấy đã thuê một khách sạn nơi có hồ bơi tuyệt vời...'",
+                    optionsAnalysis: "Sự khác biệt từ vựng:<br>A. lived: sinh sống (phải đi với giới từ 'in').<br>B. rented: thuê ngắn hạn/dài hạn một cơ sở vật chất (nhà, phòng khách sạn).<br>C. hired: thuê mướn nhân công hoặc đồ vật nhỏ di động.<br>D. stayed: ở lại (cần giới từ 'at/in').",
+                    matchReason: "Hotel đóng vai trò là tân ngữ trực tiếp đứng sau động từ ngoại. Hành động trả tiền để dùng phòng khách sạn gọi là 'rented a hotel'.",
+                    failReason: "Lived và stayed thiếu giới từ đi kèm để kết nối với danh từ khách sạn."
+                }
+            },
+            {
+                uid: "ex19_2_q3",
+                blockTitle: "Exercise 19 - Passage ❷: Multiple Choice",
+                style: "abcd",
+                promptText: "He couldn't understand why he felt (3)______ that.",
+                choices: ["A. like", "B. as", "C. so", "D. Ø"],
+                solution: "A. like",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Cậu ấy không thể hiểu nổi tại sao mình lại cảm thấy như thế (như vậy).'",
+                    optionsAnalysis: "Cấu trúc so sánh tương đồng cảm giác:<br>Feel like + đại từ/danh từ: Cảm thấy giống như cái gì/ như thế nào.",
+                    matchReason: "Cụm 'felt like that' mang ý nghĩa là cảm thấy cơ thể bất ổn như thế đó (lúc nóng lúc lạnh ở câu trước).",
+                    failReason: "As thường chỉ vai trò chức năng, so không đứng trực tiếp trước đại từ chỉ định 'that' trong cấu trúc này."
+                }
+            },
+            {
+                uid: "ex19_2_q4",
+                blockTitle: "Exercise 19 - Passage ❷: Multiple Choice",
+                style: "abcd",
+                promptText: "...went to see the local doctor, who was a very nice man, and (4)_______ voice was so sweet.",
+                choices: ["A. spoke", "B. an", "C. who", "D. whose"],
+                solution: "D. whose",
+                explanation: {
+                    intro: "Dịch nghĩa câu: '...đến gặp bác sĩ địa phương, người đàn ông rất tốt bụng và có giọng nói rất ngọt ngào.'",
+                    optionsAnalysis: "Đại từ quan hệ:<br>Whose + Danh từ: Thay thế cho tính từ sở hữu chỉ người đứng trước (giọng nói CỦA người bác sĩ).",
+                    matchReason: "Danh từ 'voice' thuộc quyền sở hữu của 'doctor'. Cần một đại từ quan hệ sở hữu nối mệnh đề -> Chọn 'whose'.",
+                    failReason: "Who chỉ làm chủ ngữ thay thế trực tiếp cho người chứ không chỉ sở hữu tài sản/đặc điểm cơ thể."
+                }
+            },
+            {
+                uid: "ex19_2_q5",
+                blockTitle: "Exercise 19 - Passage ❷: Multiple Choice",
+                style: "abcd",
+                promptText: "\"It's too hot for most of us! (5)_______ this medicine, and stay out of the sun.\"",
+                choices: ["A. Eat", "B. Drink", "C. Take", "D. Have"],
+                solution: "C. Take",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Hãy uống viên thuốc này và tránh xa ánh nắng mặt trời.'",
+                    optionsAnalysis: "Collocation của ngành y tế tiếng Anh:<br>TAKE MEDICINE: Uống thuốc, dùng thuốc uống.",
+                    matchReason: "Người bản xứ không dùng 'eat' hay 'drink' cho các loại thuốc điều trị, hành vi uống thuốc luôn đi với động từ 'Take'.",
+                    failReason: "Các từ Eat/Drink/Have sai thói quen kết hợp từ (collocation) nghiêm trọng trong tiếng Anh."
+                }
+            },
+            {
+                uid: "ex19_2_q6",
+                blockTitle: "Exercise 19 - Passage ❷: Multiple Choice",
+                style: "abcd",
+                promptText: "Long took the doctor's (6)_______ and stayed in his room for the rest of his holiday.",
+                choices: ["A. chance", "B. advice", "C. opportunity", "D. advise"],
+                solution: "B. advice",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Long đã nghe theo lời khuyên của bác sĩ và ở lại trong phòng...'",
+                    optionsAnalysis: "Phân biệt từ loại danh từ và động từ:<br>B. advice (n): lời khuyên (danh từ không đếm được).<br>D. advise (v): khuyên bảo (động từ).",
+                    matchReason: "Đứng sau sở hữu cách 'doctor's' ta bắt buộc cần một danh từ. Lời dặn dò uống thuốc tránh nắng của bác sĩ chính là lời khuyên hữu ích -> Chọn 'advice'.",
+                    failReason: "Advise sai loại từ (là động từ). Chance/Opportunity mang nghĩa cơ hội, không phù hợp ngữ cảnh y tế."
+                }
+            },
+            // EX 20 - ADVERTISEMENT 1
+            {
+                uid: "ex20_1_q1",
+                blockTitle: "Exercise 20 - Advertisement ❶: Notice to All Students",
+                style: "abcd",
+                promptText: "Please be ready at the school gate (1)______ 7:30 AM this Saturday.",
+                choices: ["A. on", "B. at", "C. for", "D. in"],
+                solution: "B. at",
+                explanation: {
+                    intro: "Dịch nghĩa: 'Vui lòng có mặt đông đủ tại cổng trường vào lúc 7 giờ 30 phút sáng thứ Bảy tuần này.'",
+                    optionsAnalysis: "Quy tắc sử dụng giới từ chỉ thời gian:<br>- AT + Giờ cố định cụ thể.<br>- ON + Ngày trong tuần.<br>- IN + Tháng/ Năm/ Buổi lớn.",
+                    matchReason: "Vì ngay phía sau là mốc giờ cụ thể '7:30 AM' nên bắt buộc phải dùng giới từ 'at'.",
+                    failReason: "On hoặc In sai nguyên tắc phối hợp ngữ pháp mốc thời gian giờ giấc."
+                }
+            },
+            {
+                uid: "ex20_1_q2",
+                blockTitle: "Exercise 20 - Advertisement ❶: Notice to All Students",
+                style: "abcd",
+                promptText: "Wear comfortable clothes because you (2)______ your own pottery!",
+                choices: ["A. will make", "B. made", "C. are making", "D. make"],
+                solution: "A. will make",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Hãy mặc quần áo thoải mái vì các con sẽ được tự tay làm đồ gốm của riêng mình đấy!'",
+                    optionsAnalysis: "Xét mốc thời gian của thông báo:<br>Sử dụng thì Tương lai đơn 'will + V' để thông báo về một hoạt động trải nghiệm sẽ diễn ra trong chuyến đi sắp tới (upcoming trip).",
+                    matchReason: "Diễn tả hành động sẽ xảy ra trong tương lai tại làng gốm -> 'will make'.",
+                    failReason: "Made là quá khứ (sai thực tế chưa đi). Make hiện tại đơn không nhấn mạnh tính chất trải nghiệm sắp tới."
+                }
+            },
+            {
+                uid: "ex20_1_q3",
+                blockTitle: "Exercise 20 - Advertisement ❶: Notice to All Students",
+                style: "abcd",
+                promptText: "This is a fun way to learn about Vietnamese (3)______ and practice English with friends.",
+                choices: ["A. culturally", "B. culture", "C. cultural", "D. multicultural"],
+                solution: "B. culture",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Đây là một cách vui nhộn để tìm hiểu về văn hóa Việt Nam...'",
+                    optionsAnalysis: "Xác định từ loại đứng sau tính từ quốc tịch 'Vietnamese':<br>A. culturally (adv): thuộc văn hóa.<br>B. culture (n): nền văn hóa.<br>C. cultural (adj): mang tính văn hóa.",
+                    matchReason: "Vị trí này làm tân ngữ của giới từ 'about', cần một Danh từ chỉ thực thể -> Chọn danh từ 'culture' (Văn hóa Việt Nam).",
+                    failReason: "Các đáp án khác là trạng từ hoặc tính từ, không thể đứng cô độc làm tân ngữ đứng sau giới từ."
+                }
+            },
+            {
+                uid: "ex20_1_q4",
+                blockTitle: "Exercise 20 - Advertisement ❶: Notice to All Students",
+                style: "abcd",
+                promptText: "(4)______ you have any questions, ask your teacher. Thank you!",
+                choices: ["A. If", "B. When", "C. For", "D. Unless"],
+                solution: "A. If",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Nếu các con có bất kỳ câu hỏi nào, hãy hỏi giáo viên của mình nhé.'",
+                    optionsAnalysis: "Mô hình câu điều kiện loại 1:<br>IF + S + V(s/es), V-bare (câu mệnh lệnh).",
+                    matchReason: "Liên từ 'If' thể hiện giả định điều kiện giả sử có thắc mắc xảy ra thì thực hiện hành động hỏi han.",
+                    failReason: "Unless mang nghĩa là 'Trừ khi' (Nếu không) làm câu bị ngược nghĩa hoàn toàn."
+                }
+            },
+            // EX 20 - ADVERTISEMENT 2
+            {
+                uid: "ex20_2_q1",
+                blockTitle: "Exercise 20 - Advertisement ❷: Come Enjoy Life",
+                style: "abcd",
+                promptText: "Come to (1)_______ countryside! Life here is quiet and beautiful.",
+                choices: ["A. no article", "B. the", "C. a", "D. an"],
+                solution: "B. the",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Hãy đến với vùng nông thôn! Cuộc sống nơi đây thật yên bình và tươi đẹp.'",
+                    optionsAnalysis: "Quy tắc mạo từ cố định:<br>THE COUNTRYSIDE: Vùng nông thôn (luôn đi kèm mạo từ xác định 'the' để chỉ môi trường địa lý phân biệt với thành thị).",
+                    matchReason: "Theo thói quen ngôn ngữ bắt buộc của danh từ này, ta điền mạo từ 'the'.",
+                    failReason: "Mạo từ a/an chỉ vật chung chung chưa xác định hoặc không mạo từ đều không đúng ngữ pháp tiếng Anh chuẩn."
+                }
+            },
+            {
+                uid: "ex20_2_q2",
+                blockTitle: "Exercise 20 - Advertisement ❷: Come Enjoy Life",
+                style: "abcd",
+                promptText: "You can walk in green fields, (2)______ clean air, and listen to birds sing.",
+                choices: ["A. cut", "B. harvest", "C. breathe", "D. unload"],
+                solution: "C. breathe",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Bạn có thể đi dạo trên những cánh đồng xanh, hít thở không khí trong lành...'",
+                    optionsAnalysis: "Kết hợp từ đi với không khí (air):<br>A. cut: cắt xén<br>B. harvest: thu hoạch vụ mùa<br>C. breathe: hít thở (không khí)<br>D. unload: dỡ hàng hóa.",
+                    matchReason: "Động từ duy nhất có thể tương tác sinh học phù hợp với tân ngữ 'clean air' là 'breathe' (hít thở).",
+                    failReason: "Không ai đi cắt hoặc thu hoạch không khí nên các từ khác hoàn toàn vô nghĩa."
+                }
+            },
+            {
+                uid: "ex20_2_q3",
+                blockTitle: "Exercise 20 - Advertisement ❷: Come Enjoy Life",
+                style: "abcd",
+                promptText: "People are (3)______ and always ready to help.",
+                choices: ["A. friendliness", "B. unfriendly", "C. friendship", "D. friendly"],
+                solution: "D. friendly",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Con người nơi đây thì thân thiện và luôn sẵn sàng giúp đỡ bạn.'",
+                    optionsAnalysis: "Phân tích ngữ pháp sau động từ tobe 'are':<br>Cần một tính từ mô tả đặc điểm tính cách con người. Cấu trúc song hành với từ 'ready'.<br>D. friendly (adj): thân thiện dễ mến.",
+                    matchReason: "Tính từ mang ý nghĩa tích cực khen ngợi con người vùng quê -> Chọn 'friendly'.",
+                    failReason: "Friendliness và friendship là danh từ. Unfriendly mang nghĩa tiêu cực (đáng ghét) sai nội dung bài quảng cáo khen ngợi vùng quê."
+                }
+            },
+            {
+                uid: "ex20_2_q4",
+                blockTitle: "Exercise 20 - Advertisement ❷: Come Enjoy Life",
+                style: "abcd",
+                promptText: "Life in the countryside is good (4)______ your body and mind.",
+                choices: ["A. with", "B. to", "C. for", "D. at"],
+                solution: "C. for",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Cuộc sống ở nông thôn rất tốt cho cơ thể và tâm trí của bạn.'",
+                    optionsAnalysis: "Cấu trúc tính từ đi kèm giới từ:<br>BE GOOD FOR SOMEBODY/SOMETHING: Có lợi, tốt cho cái gì.",
+                    matchReason: "Theo cấu trúc 'good for your body' diễn đạt lợi ích sức khỏe thể chất và tinh thần.",
+                    failReason: "Good at mang nghĩa là giỏi môn học nào đó, không dùng cho cấu trúc chỉ lợi ích."
+                }
+            },
+            // EX 21 - SIGNBOARDS VISUAL MOCKUP
+            {
+                uid: "ex21_q1",
+                blockTitle: "Exercise 21: Look at the sign or the notice. Choose the best answer.",
+                style: "abcd",
+                uiMockup: "sign-fire",
+                promptText: "[Hình vẽ mô phỏng bảng báo: 🔥 IN CASE OF FIRE - DO NOT USE ELEVATOR ❌]\n1. What does the notice say?",
+                choices: [
+                    "A. Three people can use the elevator at the same time during a fire.",
+                    "B. For your safety, use the elevator with others during a fire.",
+                    "C. If there is a fire, don't use the elevator.",
+                    "D. You have to use the elevator when it is on fire."
+                ],
+                solution: "C. If there is a fire, don't use the elevator.",
+                explanation: {
+                    intro: "Dịch nghĩa biển báo: 'Trong trường hợp có hỏa hoạn - Không được sử dụng thang máy.'",
+                    optionsAnalysis: "Đối chiếu các đáp án câu hỏi:<br>A, B, D khuyên hoặc bắt buộc dùng thang máy khi cháy (vô cùng nguy hiểm).<br>C. Nếu có đám cháy, không được đi thang máy.",
+                    matchReason: "Đáp án C dịch hoàn toàn chính xác theo câu lệnh cấm 'do not use elevator' của biển báo an toàn tòa nhà.",
+                    failReason: "Các đáp án còn lại truyền đạt thông tin sai lệch gây nguy hiểm tính mạng."
+                }
+            },
+            {
+                uid: "ex21_q2",
+                blockTitle: "Exercise 21: Look at the sign or the notice.",
+                style: "abcd",
+                uiMockup: "sign-construction",
+                promptText: "[Hình vẽ mô phỏng biển báo: ⚠️ CAUTION - CONSTRUCTION WORK IN PROGRESS 🚧]\n2. What does the sign say?",
+                choices: [
+                    "A. Be careful because building work is happening.",
+                    "B. There is careful construction.",
+                    "C. Construction must be carefully done in progress.",
+                    "D. You have to construct buildings with caution."
+                ],
+                solution: "A. Be careful because building work is happening.",
+                explanation: {
+                    intro: "Dịch nghĩa biển báo: 'Cẩn trọng - Công trình xây dựng đang trong quá trình thực hiện.'",
+                    optionsAnalysis: "Phân tích ngữ nghĩa:<br>Caution = Be careful (Hãy cẩn thận).<br>Construction work in progress = Building work is happening (Công việc xây cất đang diễn ra).",
+                    matchReason: "Do đó, câu A diễn đạt hoàn hảo bản chất lời cảnh báo cho người đi đường né tránh nguy hiểm vật liệu rơi rớt.",
+                    failReason: "B, C, D diễn đạt lủng củng sai ngữ pháp cấu trúc lời nhắc nhở an toàn lao động."
+                }
+            },
+            {
+                uid: "ex21_q3",
+                blockTitle: "Exercise 21: Look at the sign or the notice.",
+                style: "abcd",
+                uiMockup: "sign-bike",
+                promptText: "[Hình vẽ mô phỏng biển báo: 🛑 WARNING - DO NOT LEAN BICYCLES AGAINST THE WINDOW GLASS 🪟]\n3. What does the notice say?",
+                choices: [
+                    "A. Your bicycle may not be safe here.",
+                    "B. You mustn't touch the glass bicycle.",
+                    "C. Broken glass may damage your bicycle tyles.",
+                    "D. Do not leave your bicycle touching the window."
+                ],
+                solution: "D. Do not leave your bicycle touching the window.",
+                explanation: {
+                    intro: "Dịch nghĩa biển báo: 'Cảnh báo - Không tựa xe đạp vào cửa kính.'",
+                    optionsAnalysis: "Từ đồng nghĩa:<br>Lean against = touching (tựa sát vào, chạm vào cửa sổ). Do not leave = cấm để lại.",
+                    matchReason: "Câu D truyền tải chính xác mệnh lệnh cấm học sinh dựng xe đạp cấn vào cửa kính làm bể vỡ.",
+                    failReason: "Các phương án khác tự bịa ra thông tin kính vỡ làm rách lốp xe (C) không có trong biển gốc."
+                }
+            },
+            {
+                uid: "ex21_q4",
+                blockTitle: "Exercise 21: Look at the sign or the notice.",
+                style: "abcd",
+                uiMockup: "sign-fishing",
+                promptText: "[Hình vẽ mô phỏng biển báo: 🚫 NO FISHING ALLOWED IN THIS AREA 🎣]\n4. What does the sign say?",
+                choices: [
+                    "A. You must get a license to fish here.",
+                    "B. You don't need to pay attention to your fishing.",
+                    "C. You are not allowed to fish here.",
+                    "D. You can only catch certain types of fish."
+                ],
+                solution: "C. You are not allowed to fish here.",
+                explanation: {
+                    intro: "Dịch nghĩa biển báo: 'Cấm đánh bắt cá tại khu vực này.'",
+                    optionsAnalysis: "Cấu trúc câu đồng nghĩa câu cấm đoán:<br>No V-ing allowed = S + be + NOT allowed to V (Không được phép làm gì).",
+                    matchReason: "Câu C đồng nghĩa hoàn toàn với biển báo cấm câu cá.",
+                    failReason: "Các câu khác bảo phải đi xin giấy phép (A) hoặc câu cá có lựa chọn loại cá (D) là sai luật biển báo."
+                }
+            },
+            {
+                uid: "ex21_q5",
+                blockTitle: "Exercise 21: Look at the sign or the notice.",
+                style: "abcd",
+                uiMockup: "phone-sms",
+                promptText: "[Tin nhắn từ Daisy gửi Kim: 'Hi Kim, Beth phoned. She will bring the coffee tomorrow when she returns from the supermarket.' ]\n5. What does the message mean?",
+                choices: [
+                    "A. Daisy wants Kim to buy some coffee this afternoon.",
+                    "B. Beth will buy coffee tomorrow when she returns home.",
+                    "C. Beth will go to the supermarket tomorrow.",
+                    "D. Daisy should give Beth some money to buy coffee."
+                ],
+                solution: "B. Beth will buy coffee tomorrow when she returns home.",
+                explanation: {
+                    intro: "Dịch nghĩa tin nhắn: 'Chào Kim, Beth đã gọi điện. Cậu ấy sẽ mang cà phê đến vào ngày mai khi cậu ấy đi siêu thị về nhé.'",
+                    optionsAnalysis: "Giải mã hành động: Người sẽ mang cà phê tới là Beth, thời gian là ngày mai.",
+                    matchReason: "Đáp án B thể hiện đúng bản chất sự việc: Beth sẽ mua/mang cà phê vào ngày mai khi quay trở về nhà.",
+                    failReason: "Câu A sai vì Daisy không bảo Kim đi mua cà phê mà chỉ đang nhắn lại lời nhắn của người khác."
+                }
+            },
+            // EX 22 - PASSAGE 1 QUESTIONS
+            {
+                uid: "ex22_1_q1",
+                blockTitle: "Exercise 22 - Passage ❶: Reading Comprehension",
+                style: "abcd",
+                promptText: "1. What can be the best title for the passage?",
+                choices: [
+                    "A. The Joys of Retirement in the Countryside",
+                    "B. City Life vs. Country Life: A Comparison",
+                    "C. Finding a Job in Rural Areas",
+                    "D. The Challenges of Raising Children in the Country"
+                ],
+                solution: "B. City Life vs. Country Life: A Comparison",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Đâu là tiêu đề phù hợp nhất cho đoạn văn?'",
+                    optionsAnalysis: "Dẫn chứng bài đọc:<br>Đoạn văn mở đầu bằng câu: 'Living in the country is something that people from the city often dream about. However... it has both advantages and disadvantages.' (Sống ở quê là ước mơ thành thị, tuy nhiên nó có cả lợi thế lẫn tác hại). Các đoạn sau phân tích chi tiết hai mặt so sánh đối chiếu này.",
+                    matchReason: "Do đó tiêu đề bao quát so sánh cuộc sống thành phố và nông thôn (City Life vs. Country Life) là chính xác nhất.",
+                    failReason: "Các câu A, C, D chỉ là một ý nhỏ được liệt kê làm ví dụ trong bài chứ không bao quát toàn bộ nội dung văn bản."
+                }
+            },
+            {
+                uid: "ex22_1_q2",
+                blockTitle: "Exercise 22 - Passage ❶: Reading Comprehension",
+                style: "abcd",
+                promptText: "2. The word “drawbacks” in paragraph 3 is closest in meaning to __________",
+                choices: ["A. benefits", "B. solutions", "C. disadvantages", "D. opportunities"],
+                solution: "C. disadvantages",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Từ drawbacks trong đoạn 3 gần nghĩa nhất với từ nào?'",
+                    optionsAnalysis: "Dẫn chứng ngữ cảnh bài đọc:<br>Đầu câu đoạn 3 ghi: 'However, there are certain disadvantages or drawbacks to life outside the city.' (Tuy nhiên, có những bất lợi hoặc 'drawbacks' đối với cuộc sống ngoài thành phố).",
+                    matchReason: "Từ liên kết 'or' nối hai từ đồng nghĩa song hành. Do đó 'drawbacks' chính bằng 'disadvantages' (nhược điểm, điều bất lợi).",
+                    failReason: "Benefits (lợi ích), solutions (giải pháp), opportunities (cơ hội) mang nghĩa tích cực, trái ngược từ trong văn cảnh."
+                }
+            },
+            {
+                uid: "ex22_1_q3",
+                blockTitle: "Exercise 22 - Passage ❶: Reading Comprehension",
+                style: "abcd",
+                promptText: "3. The word “it” in paragraph 4 refers to _______.",
+                choices: ["A. the city", "B. the country", "C. a career", "D. entertainment"],
+                solution: "B. the country",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Từ it trong đoạn 4 ám chỉ điều gì?'",
+                    optionsAnalysis: "Dẫn chứng văn bản:<br>Câu trước viết: '...it can be seen that the country is more suitable for some people than others. On the whole, it is often the best for those who are retired...' (Có thể thấy rằng nông thôn phù hợp với một số người. Nhìn chung, nó tốt nhất cho người già...)",
+                    matchReason: "Chữ 'it' đóng vai trò đại từ lặp lại thay thế cho danh từ 'the country' (nông thôn) đã được nhắc đến ở câu liền trước.",
+                    failReason: "Nếu thế các từ 'the city' hay 'career' vào dịch nghĩa câu sẽ trở nên tối nghĩa, không khớp logic liên kết."
+                }
+            },
+            {
+                uid: "ex22_1_q4",
+                blockTitle: "Exercise 22 - Passage ❶: Reading Comprehension",
+                style: "abcd",
+                promptText: "4. Which of the following is NOT true according to the passage?",
+                choices: [
+                    "A. The countryside generally offers more peace and quiet than the city.",
+                    "B. People in the country tend to be more unfriendly than those in the city.",
+                    "C. It is typically safer for young children in the country due to less traffic.",
+                    "D. Finding entertainment in the evening can be a challenge in the countryside."
+                ],
+                solution: "B. People in the country tend to be more unfriendly than those in the city.",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Câu nào dưới đây KHÔNG ĐÚNG theo đoạn văn?'",
+                    optionsAnalysis: "Kiểm tra dẫn chứng:<br>- Đoạn 2 ghi: 'First, you can enjoy peace and quietness.' -> A đúng.<br>- Đoạn 2 ghi: 'A further advantage is that there is less traffic, so it is safer for young children.' -> C đúng.<br>- Đoạn 3 ghi: 'In addition, entertainment is difficult to find, particularly in the evening.' -> D đúng.<br>- Đoạn 2 ghi rõ: 'Moreover, people tend to be friendlier.' (Mọi người có xu hướng thân thiện hơn).",
+                    matchReason: "Câu B nói con người nông thôn 'more unfriendly' (đáng ghét, không thân thiện hơn) là hoàn toàn sai lệch và trái ngược với thông tin gốc của bài đọc.",
+                    failReason: "Các đáp án khác đều có câu chữ trùng khớp thông tin khẳng định trong bài."
+                }
+            },
+            {
+                uid: "ex22_1_q5",
+                blockTitle: "Exercise 22 - Passage ❶: Reading Comprehension",
+                style: "abcd",
+                promptText: "5. Which of the following can be inferred from the passage?",
+                choices: [
+                    "A. The decision to live in the city or the country depends on an individual's life stage and priorities.",
+                    "B. Young people should avoid living in the countryside at all costs.",
+                    "C. All city dwellers dream of moving to the countryside.",
+                    "D. There are more job opportunities in the countryside than in the city."
+                ],
+                solution: "A. The decision to live in the city or the country depends on an individual's life stage and priorities.",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Điều nào có thể suy luận ra từ đoạn văn?'",
+                    optionsAnalysis: "Dẫn chứng suy luận ở đoạn cuối:<br>Tác giả viết người già về hưu hoặc có con nhỏ thích hợp ở nông thôn, trong khi người trẻ tuổi gầy dựng sự nghiệp thích hợp ở thành phố.",
+                    matchReason: "Điều này chứng minh việc chọn nơi sống phụ thuộc hoàn toàn vào giai đoạn cuộc đời (life stage) và độ ưu tiên mục tiêu cá nhân của từng người -> Chọn A.",
+                    failReason: "Câu B mang tính cực đoan áp đặt (avoid at all costs). Câu C mang tính quy chụp tuyệt đối (All city dwellers). Câu D sai thực tế bài viết (fewer shops means hard to find jobs)."
+                }
+            },
+            // EX 22 - PASSAGE 2 QUESTIONS
+            {
+                uid: "ex22_2_q1",
+                blockTitle: "Exercise 22 - Passage ❷: Reading Comprehension",
+                style: "abcd",
+                promptText: "1. What is the main idea of the passage?",
+                choices: [
+                    "A. The types of houses Vietnamese villagers live in.",
+                    "B. The importance of communal houses in Vietnamese villages.",
+                    "C. The diverse livelihoods and lifestyles of people in different regions of Vietnam.",
+                    "D. The impact of natural disasters on the people of Central Vietnam."
+                ],
+                solution: "C. The diverse livelihoods and lifestyles of people in different regions of Vietnam.",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Ý chính của đoạn văn trên là gì?'",
+                    optionsAnalysis: "Dẫn chứng xuyên suốt bài đọc:<br>Tác giả liệt kê cách sinh sống của người dân ở nhiều vùng miền khác nhau: Người miền Nam xây nhà sàn chống lũ, ngư dân ven biển bám biển, người miền Trung chịu thiên tai nên chịu khó, người Tây Nguyên và vùng núi phía Bắc trồng cao su, cà phê, đi săn...",
+                    matchReason: "Do đó bài viết mô tả sự đa dạng trong sinh kế (livelihoods) và phong cách sống của người dân ở khắp các vùng địa lý Việt Nam -> Chọn C.",
+                    failReason: "Các đáp án A, B, D chỉ là các câu ví dụ đơn lẻ mô tả cho một vùng miền cụ thể chứ không bao quát được toàn bộ bức tranh của cả bài."
+                }
+            },
+            {
+                uid: "ex22_2_q2",
+                blockTitle: "Exercise 22 - Passage ❷: Reading Comprehension",
+                style: "abcd",
+                promptText: "3. The word “They” in line 2 refers to _______.",
+                choices: ["A. handicrafts", "B. Southern Vietnamese", "C. great events", "D. villagers"],
+                solution: "D. villagers",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Từ They ở dòng 2 ám chỉ thực thể nào?'",
+                    optionsAnalysis: "Dẫn chứng ngữ pháp liên kết:<br>Câu trước ghi: '...villagers usually earn their living from farming, raising livestock and making handicrafts. They live in a small community...'",
+                    matchReason: "Đại từ số nhiều 'They' làm chủ ngữ thay thế trực tiếp cho danh từ số nhiều đứng trước làm chủ thể thực hiện hành động sống trong cộng đồng nhỏ, đó chính là 'villagers' (những người dân làng).",
+                    failReason: "Handicrafts (đồ thủ công) hay events (sự kiện) là vật thể, không thể thực hiện hành vi sinh sống 'live in a small community' như con người."
+                }
+            },
+            {
+                uid: "ex22_2_q4",
+                blockTitle: "Exercise 22 - Passage ❷: Reading Comprehension",
+                style: "abcd",
+                promptText: "4. According to the passage, which of the following sentences is TRUE?",
+                choices: [
+                    "A. People in the Southern region build houses on stilts to protect against earthquakes.",
+                    "B. Villagers in Vietnam rarely work in teams.",
+                    "C. People in the Central Highlands primarily earn their living through fishing.",
+                    "D. People in Central Vietnam are generally more diligent due to difficult environmental conditions."
+                ],
+                solution: "D. People in Central Vietnam are generally more diligent due to difficult environmental conditions.",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Theo đoạn văn, câu nào dưới đây là ĐÚNG?'",
+                    optionsAnalysis: "Đối chiếu chi tiết dữ liệu văn bản:<br>- Bài ghi người miền Nam làm nhà sàn chống nước lũ (flood waters) chứ không phải chống động đất (earthquakes) -> A sai.<br>- Bài mở đầu khen dân làng có thói quen làm việc nhóm (working in teams) -> B sai.<br>- Người miền núi Tây Nguyên trồng lúa, cao su, cà phê chứ không đánh cá -> C sai.<br>- Đoạn văn có câu: 'In the Central of Vietnam, a place suffering lots of natural disasters... citizens tend to be more studious and hard-working...'",
+                    matchReason: "Từ 'diligent' đồng nghĩa với 'hard-working' (chăm chỉ). Như vậy thông tin người miền Trung chăm chỉ chịu khó do thiên tai khắc nghiệt là hoàn toàn chính xác theo bài -> Chọn D.",
+                    failReason: "Các câu khác cố tình hoán đổi các từ khóa địa lý hoặc nguyên nhân gây nhiễu sai thực tế."
+                }
+            },
+            {
+                uid: "ex22_2_q5",
+                blockTitle: "Exercise 22 - Passage ❷: Reading Comprehension",
+                style: "abcd",
+                promptText: "5. Which of the following can be inferred from the passage?",
+                choices: [
+                    "A. Vietnamese culture emphasizes individual achievement over community cooperation.",
+                    "B. Geographical conditions significantly influence the economic activities and characteristics of people in Vietnam.",
+                    "C. All Vietnamese people live in villages and engage in farming.",
+                    "D. Festivals in Vietnam are only organized in temples."
+                ],
+                solution: "B. Geographical conditions significantly influence the economic activities and characteristics of people in Vietnam.",
+                explanation: {
+                    intro: "Dịch câu hỏi: 'Điều nào có thể suy ra một cách logic từ đoạn văn?'",
+                    optionsAnalysis: "Phân tích mối quan hệ nhân quả:<br>Bài viết chỉ ra: Vùng sông nước thì ở nhà sàn; vùng ven biển thì làm ngư dân; vùng núi cao thì trồng cây công nghiệp; vùng thiên tai thì rèn luyện tính hiếu học, chịu khó.",
+                    matchReason: "Điều này chứng minh điều kiện địa lý tự nhiên (Geographical conditions) có ảnh hưởng vô cùng sâu sắc quyết định đến hoạt động kinh tế và tính cách của con người từng vùng miền -> Chọn B.",
+                    failReason: "Lựa chọn A ngược với bài đọc (khen làm việc nhóm). Câu C quy chụp sai (All Vietnamese). Câu D dùng từ hạn định cực đoan 'only' sai quy tắc đọc hiểu."
+                }
+            },
+            // EX 23 - CLOZE TEXT 1
+            {
+                uid: "ex23_1_q1",
+                blockTitle: "Exercise 23 - Text ❶: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "People in Viet Nam's countryside come from many different ethnic groups. (1)_______, remote areas in mountainous regions, and coastline areas.",
+                choices: [
+                    "A. each group has its own language, culture and lifestyle",
+                    "B. National holidays are the time for them",
+                    "C. They mainly live in rural areas in the lowlands",
+                    "D. people in the countryside live a quieter and more peaceful life"
+                ],
+                solution: "C. They mainly live in rural areas in the lowlands",
+                explanation: {
+                    intro: "Dịch nghĩa chuỗi câu: 'Người dân ở nông thôn Việt Nam đến từ nhiều dân tộc khác nhau. Họ chủ yếu sống ở vùng nông thôn đồng bằng, các vùng sâu vùng xa miền núi và vùng duyên hải.'",
+                    optionsAnalysis: "Phân tích chuỗi liệt kê địa danh:<br>Phía sau chỗ trống có cấu trúc song hành liệt kê: '..., remote areas..., and coastline areas' (vùng núi, vùng ven biển). Vì vậy chỗ trống cần điền một địa danh đồng bộ để hoàn chỉnh bức tranh.",
+                    matchReason: "Phương án C chứa từ 'rural areas in the lowlands' (vùng nông thôn đồng bằng) hoàn chỉnh cấu trúc ngữ pháp liệt kê nơi chốn.",
+                    failReason: "Các đáp án khác không chứa từ ngữ chỉ địa điểm để tạo thành cấu trúc song song ngữ pháp với vế sau."
+                }
+            },
+            {
+                uid: "ex23_1_q2",
+                blockTitle: "Exercise 23 - Text ❶: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "Depending on native natural conditions in each region, (2)_______.",
+                choices: [
+                    "A. each group has its own language, culture and lifestyle",
+                    "B. National holidays are the time for them",
+                    "C. They mainly live in rural areas in the lowlands",
+                    "D. people in the countryside live a quieter and more peaceful life"
+                ],
+                solution: "A. each group has its own language, culture and lifestyle",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Tùy thuộc vào điều kiện tự nhiên bản địa ở mỗi vùng, mỗi nhóm dân tộc lại có ngôn ngữ, văn hóa và lối sống riêng.'",
+                    optionsAnalysis: "Mối liên kết ý nghĩa ngữ cảnh:<br>Đầu câu nhắc đến 'each region' (mỗi vùng miền địa lý) dẫn tới sự đa dạng đặc thù biệt lập.",
+                    matchReason: "Do đó vế sau điền 'each group has its own...' để tương thích với tính riêng biệt của điều kiện tự nhiên vùng miền.",
+                    failReason: "Cơ chế ngữ nghĩa của các câu khác không giải thích cho mệnh đề trạng ngữ chỉ sự phụ thuộc điều kiện tự nhiên."
+                }
+            },
+            {
+                uid: "ex23_1_q3",
+                blockTitle: "Exercise 23 - Text ❶: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "With the larger land area than urban regions, (3)_______.",
+                choices: [
+                    "A. each group has its own language, culture and lifestyle",
+                    "B. National holidays are the time for them",
+                    "C. They mainly live in rural areas in the lowlands",
+                    "D. people in the countryside live a quieter and more peaceful life"
+                ],
+                solution: "D. people in the countryside live a quieter and more peaceful life",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Với diện tích đất đai rộng lớn hơn khu vực thành thị, người dân ở nông thôn sống một cuộc sống yên tĩnh và thanh bình hơn.'",
+                    optionsAnalysis: "Phân tích nguyên nhân kết quả:<br>Vế đầu đưa ra tiền đề diện tích đất rộng lớn, thưa dân hơn đô thị (larger land area than urban).",
+                    matchReason: "Hệ quả tất yếu dẫn đến là cuộc sống thanh bình, không xô bồ chật hẹp -> Chọn D.",
+                    failReason: "Chuyện đất rộng không phải nguyên nhân sinh ra các ngày nghỉ quốc gia (B) hay ngôn ngữ riêng (A)."
+                }
+            },
+            {
+                uid: "ex23_1_q4",
+                blockTitle: "Exercise 23 - Text ❶: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "The majority of them decide to settle down in urban areas instead of coming back to their hometown. (4)_______ to visit their families in the countryside; therefore, you can see big cities in Viet Nam with cleaner atmosphere...",
+                choices: [
+                    "A. each group has its own language, culture and lifestyle",
+                    "B. National holidays are the time for them",
+                    "C. They mainly live in rural areas in the lowlands",
+                    "D. people in the countryside live a quieter and more peaceful life"
+                ],
+                solution: "B. National holidays are the time for them",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Các ngày nghỉ lễ quốc gia là thời gian để họ về thăm gia đình ở nông thôn; do đó, bạn có thể nhìn thấy các thành phố lớn ở Việt Nam với bầu không khí trong lành hơn bình thường vào những thời điểm này.'",
+                    optionsAnalysis: "Phân tích từ khóa liên kết logic:<br>Câu sau chứa trạng từ chỉ kết quả 'therefore' (do đó) thành phố vắng người, không khí sạch sẽ hơn.",
+                    matchReason: "Nguyên nhân của việc thành phố vắng vẻ là vì mọi người đã đổ xô đi về quê trong các dịp nghỉ lễ lớn ('National holidays are the time for them') -> Chọn B.",
+                    failReason: "Các câu khác hoàn toàn lạc đề, không có mốc thời gian hành vi di cư ngắn hạn để tạo ra hiện tượng thành phố sạch đẹp."
+                }
+            },
+            // EX 23 - CLOZE TEXT 2
+            {
+                uid: "ex23_2_q1",
+                blockTitle: "Exercise 23 - Text ❷: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "Many people think so, (1)_______ though they cannot live there all year round.",
+                choices: [
+                    "A. Almost every village has a church",
+                    "B. Country life is now fairly comfortable and many villages",
+                    "C. and go to the country for the summer holidays",
+                    "D. what they can't find in the village shops"
+                ],
+                solution: "C. and go to the country for the summer holidays",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Nhiều người nghĩ như vậy, và thường về nông thôn vào các kỳ nghỉ hè ngay cả khi họ không thể sống ở đó quanh năm.'",
+                    optionsAnalysis: "Phân tích kết nối cú pháp câu:<br>Chỗ trống đứng sau dấu phẩy nối tiếp hành vi của 'Many people...'. Cụm từ bổ trợ nghĩa cho 'though they cannot live there all year round'.",
+                    matchReason: "Phương án C bổ sung hành động đi về quê nghỉ hè ('go to the country for the summer holidays') hoàn toàn tương thích ngữ nghĩa và cấu trúc ngữ pháp.",
+                    failReason: "Các lựa chọn khác đưa danh từ ngôi nhà hoặc nhà thờ vào làm câu bị gãy cấu trúc ngữ pháp."
+                }
+            },
+            {
+                uid: "ex23_2_q2",
+                blockTitle: "Exercise 23 - Text ❷: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "English villages are not all alike, but in some ways they are not very different from one another. (2)_______, the round or square tower of which can be seen from many miles around.",
+                choices: [
+                    "A. Almost every village has a church",
+                    "B. Country life is now fairly comfortable and many villages",
+                    "C. and go to the country for the summer holidays",
+                    "D. what they can't find in the village shops"
+                ],
+                solution: "A. Almost every village has a church",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Hầu như ngôi làng nào cũng có một nhà thờ, cái tháp tròn hoặc tháp vuông của nó có thể nhìn thấy từ cách xa hàng dặm.'",
+                    optionsAnalysis: "Phân tích đại từ liên hệ đứng sau:<br>Mệnh đề quan hệ chứa chữ 'the round or square tower of WHICH' (Cái tháp của CÁI MÀ). Chữ 'which' này bắt buộc phải thay thế cho một danh từ chỉ vật thể kiến trúc có tháp trước đó.",
+                    matchReason: "Danh từ kiến trúc phù hợp chính là 'a church' (ngôi nhà thờ công giáo luôn có tháp chuông cao) -> Chọn A.",
+                    failReason: "Các phương án khác kết thúc bằng danh từ số nhiều villages hoặc danh từ khác không thể có tháp chuông tương thích đại từ 'which'."
+                }
+            },
+            {
+                uid: "ex23_2_q3",
+                blockTitle: "Exercise 23 - Text ❷: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "The village green is a wide stretch of grass, and houses or cottages are built round it. (3)_______ have running water brought through pipes into each house.",
+                choices: [
+                    "A. Almost every village has a church",
+                    "B. Country life is now fairly comfortable and many villages",
+                    "C. and go to the country for the summer holidays",
+                    "D. what they can't find in the village shops"
+                ],
+                solution: "B. Country life is now fairly comfortable and many villages",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Cuộc sống ở nông thôn hiện nay khá thoải mái và nhiều ngôi làng đã có nước máy được dẫn qua đường ống vào từng nhà.'",
+                    optionsAnalysis: "Phân tích ngữ pháp đầu câu tiếp theo:<br>Chỗ trống cần một mệnh đề độc lập có thể làm chủ ngữ liên kết với động từ 'have running water' (có nước máy chạy qua ống) ở phía sau.",
+                    matchReason: "Phương án B kết thúc bằng cụm chủ ngữ 'and many villages' kết hợp hoàn hảo tạo thành cấu trúc 'many villages have running water...'.",
+                    failReason: "Các đáp án khác không có danh từ làm chủ ngữ phù hợp chia với động từ nguyên mẫu 'have'."
+                }
+            },
+            {
+                uid: "ex23_2_q4",
+                blockTitle: "Exercise 23 - Text ❷: Sentence Removal Completion",
+                style: "abcd",
+                promptText: "Most villages are so close to some small towns that people can go there to buy (4)_______.",
+                choices: [
+                    "A. Almost every village has a church",
+                    "B. Country life is now fairly comfortable and many villages",
+                    "C. and go to the country for the summer holidays",
+                    "D. what they can't find in the village shops"
+                ],
+                solution: "D. what they can't find in the village shops",
+                explanation: {
+                    intro: "Dịch nghĩa câu: 'Hầu hết các ngôi làng đều rất gần một số thị trấn nhỏ đến mức mọi người có thể đến đó để mua những thứ họ không thể tìm thấy trong các cửa hàng ở làng.'",
+                    optionsAnalysis: "Phân tích cụm từ sau động từ 'buy' (mua):<br>Động từ ngoại Buy cần một cụm đại từ danh từ làm tân ngữ trực tiếp.",
+                    matchReason: "Cụm danh đề 'what they can't find in the village shops' (những gì họ không tìm thấy ở tiệm tạp hóa trong làng) hoàn tất ý nghĩa mua sắm bổ sung đồ đạc -> Chọn D.",
+                    failReason: "Các đáp án khác đặt vào vị trí này đều phá vỡ cấu trúc ngữ pháp cơ bản của động từ mua bán."
+                }
+            }
+        ];
+
+        // MEMORY STATE FOR STUDENT ANSWERS
+        let loggedAnswers = {};
+
+        // SHUFFLE FUNCTION (ALGORITHM FISHER-YATES)
+        function scrambleOptions(arr) {
+            let mutable = [...arr];
+            for (let i = mutable.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [mutable[i], mutable[j]] = [mutable[j], mutable[i]];
+            }
+            return mutable;
+        }
+
+        // GENERATE DYNAMIC EXERCISE CONTENT ON RIGHT SIDE
+        function paintQuizPane() {
+            const root = document.getElementById('dynamic-exercise-root');
+            root.innerHTML = "";
+            let sectionTracker = "";
+
+            exerciseData.forEach((item, index) => {
+                if (sectionTracker !== item.blockTitle) {
+                    sectionTracker = item.blockTitle;
+                    const secHeader = document.createElement('div');
+                    secHeader.className = "section-header";
+                    secHeader.innerText = sectionTracker;
+                    root.appendChild(secHeader);
+                }
+
+                const card = document.createElement('div');
+                card.className = "quiz-card";
+                card.id = `wrapper_card_${item.uid}`;
+
+                // Question text display
+                const qText = document.createElement('div');
+                qText.className = "question-text";
+                
+                if (item.style === "gapfill") {
+                    qText.innerHTML = `<b>Câu ${index + 1}:</b> ${item.promptText}`;
+                    card.appendChild(qText);
+
+                    // Dropdown select or dynamic interaction block for Gap-fill
+                    const interactionZone = document.createElement('div');
+                    interactionZone.style.marginTop = "10px";
+                    
+                    const triggerSpan = document.createElement('div');
+                    triggerSpan.className = "gap-fill-trigger";
+                    triggerSpan.id = `gap_trigger_${item.uid}`;
+                    triggerSpan.innerText = "Bấm chọn từ điền chỗ trống ⚡";
+                    triggerSpan.onclick = () => revealGapOptions(item.uid, item.choices, item.solution);
+                    
+                    interactionZone.appendChild(triggerSpan);
+
+                    const dropdownContainer = document.createElement('div');
+                    dropdownContainer.id = `gap_choices_box_${item.uid}`;
+                    dropdownContainer.className = "options-grid";
+                    dropdownContainer.style.display = "none";
+                    dropdownContainer.style.marginTop = "10px";
+                    
+                    item.choices.forEach(c => {
+                        const b = document.createElement('button');
+                        b.className = "option-btn";
+                        b.innerText = c;
+                        b.onclick = () => submitGapAnswer(b, item.uid, c, item.solution);
+                        dropdownContainer.appendChild(b);
+                    });
+                    
+                    interactionZone.appendChild(dropdownContainer);
+                    card.appendChild(interactionZone);
+
+                } else {
+                    // ABCD and Signboard styles
+                    qText.innerHTML = `<b>Câu ${index + 1}:</b> ${item.promptText.replace(/\n/g, '<br>')}`;
+                    card.appendChild(qText);
+
+                    // UI Mockups if specified
+                    if (item.uiMockup) {
+                        if (item.uiMockup === "sign-fire") {
+                            const uiBox = document.createElement('div');
+                            uiBox.className = "css-sign";
+                            uiBox.style.background = "#FF4757"; uiBox.style.color = "white";
+                            uiBox.innerHTML = "🔥 IN CASE OF FIRE<br><b>DO NOT USE ELEVATOR</b> ❌";
+                            card.insertBefore(uiBox, qText.nextSibling);
+                        } else if (item.uiMockup === "sign-construction") {
+                            const uiBox = document.createElement('div');
+                            uiBox.className = "css-sign";
+                            uiBox.innerHTML = "⚠️ CAUTION ⚠️<br><b>CONSTRUCTION WORK<br>IN PROGRESS</b> 🚧";
+                            card.insertBefore(uiBox, qText.nextSibling);
+                        } else if (item.uiMockup === "sign-bike") {
+                            const uiBox = document.createElement('div');
+                            uiBox.className = "css-sign";
+                            uiBox.style.background = "#FF9F43";
+                            uiBox.innerHTML = "🛑 WARNING<br><b>DO NOT LEAN BICYCLES<br>AGAINST THE WINDOW GLASS</b> 🪟";
+                            card.insertBefore(uiBox, qText.nextSibling);
+                        } else if (item.uiMockup === "sign-fishing") {
+                            const uiBox = document.createElement('div');
+                            uiBox.className = "css-sign";
+                            uiBox.style.background = "#E4E7EB"; uiBox.style.border = "4px solid #FF4757";
+                            uiBox.innerHTML = "🚫 NO FISHING ALLOWED<br>IN THIS AREA 🎣";
+                            card.insertBefore(uiBox, qText.nextSibling);
+                        } else if (item.uiMockup === "phone-sms") {
+                            const uiBox = document.createElement('div');
+                            uiBox.className = "css-phone";
+                            uiBox.innerHTML = "<small>📱 Message from Daisy:</small><div class='css-bubble'>Hi Kim, Beth phoned. She will bring the coffee tomorrow when she returns from the supermarket.</div>";
+                            card.insertBefore(uiBox, qText.nextSibling);
+                        }
+                    }
+
+                    const optGrid = document.createElement('div');
+                    optGrid.className = "options-grid";
+
+                    // Shuffle options dynamically on reload
+                    const scrambled = scrambleOptions(item.choices);
+                    scrambled.forEach(choiceText => {
+                        const btn = document.createElement('button');
+                        btn.className = "option-btn";
+                        btn.innerText = choiceText;
+                        btn.onclick = () => evaluateAbcdClick(btn, item.uid, choiceText, item.solution);
+                        optGrid.appendChild(btn);
+                    });
+                    card.appendChild(optGrid);
+                }
+
+                // Append professional Academic Explanation Panel
+                const expPanel = document.createElement('div');
+                expPanel.className = "explanation-box";
+                expPanel.id = `panel_exp_${item.uid}`;
+                expPanel.innerHTML = `
+                    <h5>💡 GIẢI THÍCH CHI TIẾT TỪ THẠC SỸ MS LÊ HẰNG:</h5>
+                    <p>👉 <b>Phân tích ngữ cảnh:</b> ${item.explanation.intro}</p>
+                    <p>📑 <b>Từ vựng cốt lõi:</b> ${item.explanation.optionsAnalysis}</p>
+                    <p style="color: var(--correct-color); font-weight:700;">✅ <b>Vì sao chọn đáp án này:</b> ${item.explanation.matchReason}</p>
+                    <p style="color: var(--wrong-color); font-weight:700;">❌ <b>Vì sao loại câu khác:</b> ${item.explanation.failReason}</p>
+                `;
+                card.appendChild(expPanel);
+                root.appendChild(card);
+            });
+        }
+
+        // INTERACTION CONTROLLERS
+        function revealGapOptions(uid, choices, solution) {
+            if (loggedAnswers[uid] !== undefined) return;
+            const targetBox = document.getElementById(`gap_choices_box_${uid}`);
+            targetBox.style.display = (targetBox.style.display === "none") ? "flex" : "none";
+        }
+
+        function submitGapAnswer(clickedBtn, uid, chosenVal, correctVal) {
+            if (loggedAnswers[uid] !== undefined) return;
+            loggedAnswers[uid] = chosenVal;
+
+            const trigger = document.getElementById(`gap_trigger_${uid}`);
+            const choicesBox = document.getElementById(`gap_choices_box_${uid}`);
+            choicesBox.style.display = "none";
+
+            trigger.innerText = `Đã chọn: ${chosenVal}`;
+
+            if (chosenVal === correctVal) {
+                trigger.classList.add('correct');
+                clickedBtn.classList.add('correct');
+                emitSound('win');
+                sparkleSingleConfetti();
+            } else {
+                trigger.style.background = "var(--wrong-color)";
+                trigger.style.color = "white";
+                clickedBtn.classList.add('wrong');
+                emitSound('lose');
+                
+                // Show accurate match instantly on error
+                const allButtons = choicesBox.querySelectorAll('.option-btn');
+                allButtons.forEach(b => {
+                    if (b.innerText === correctVal) b.classList.add('correct');
+                });
+            }
+
+            document.getElementById(`panel_exp_${uid}`).style.display = "block";
+        }
+
+        function evaluateAbcdClick(clickedBtn, uid, chosenText, solutionText) {
+            if (loggedAnswers[uid] !== undefined) return;
+            loggedAnswers[uid] = chosenText;
+
+            const parentGrid = clickedBtn.parentElement;
+            const siblings = parentGrid.querySelectorAll('.option-btn');
+
+            // Strip prefix letter like 'A. ' if required, or match strict content
+            if (chosenText === solutionText || chosenText.trim() === solutionText.trim()) {
+                clickedBtn.classList.add('correct');
+                emitSound('win');
+                sparkleSingleConfetti();
+            } else {
+                clickedBtn.classList.add('wrong');
+                emitSound('lose');
+                siblings.forEach(b => {
+                    if (b.innerText.trim() === solutionText.trim()) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+
+            document.getElementById(`panel_exp_${uid}`).style.display = "block";
+        }
+
+        // GRADING ACTION SUMMARY
+        function processGrading() {
+            let correctlyAnswered = 0;
+            const totalQuestions = exerciseData.length;
+
+            exerciseData.forEach(q => {
+                if (loggedAnswers[q.uid] !== undefined) {
+                    if (loggedAnswers[q.uid].trim() === q.solution.trim()) {
+                        correctlyAnswered++;
+                    }
+                }
+            });
+
+            const currentScoreRatio = correctlyAnswered / totalQuestions;
+            const scoreDisplay = document.getElementById('display-final-score');
+            const commentDisplay = document.getElementById('display-final-comment');
+
+            scoreDisplay.innerText = `${correctlyAnswered} / ${totalQuestions}`;
+
+            // Personalized feedback messaging matching requirements
+            if (currentScoreRatio >= 0.9) {
+                commentDisplay.innerHTML = "👑 <b>Thiên tài tiếng Anh của cô!</b> Làm tốt lắm, con cố gắng rinh điểm 10 ở lần sau nha! ✨";
+                cascadeFullConfetti();
+            } else if (currentScoreRatio >= 0.6) {
+                commentDisplay.innerHTML = "🌟 <b>Làm tốt lắm!</b> Con đã có tiến bộ khá ổn rồi, con cố gắng đọc kĩ giải thích đáp án và làm lại nha. Cô tin con sẽ làm tốt hơn ở lần sau! 💕";
+                cascadeFullConfetti();
+            } else {
+                commentDisplay.innerHTML = "💪 <b>Cố lên nhé con yêu!</b> Điểm lần này chưa cao lắm, con cố gắng đọc kĩ giải thích đáp án và làm lại nha. Cô tin con sẽ làm tốt hơn ở lần sau! Cô thương con.";
+            }
+
+            document.getElementById('result-modal').classList.add('show');
+        }
+
+        function resetEntireExam() {
+            document.getElementById('result-modal').classList.remove('show');
+            loggedAnswers = {};
+            countdownSec = 600;
+            isClockRunning = false;
+            clearInterval(clockTimer);
+            document.getElementById('time-clock').innerText = "10:00";
+            document.getElementById('timer-toggle-btn').innerText = "BẮT ĐẦU TÍNH GIỜ LÀM BÀI";
+            document.getElementById('timer-toggle-btn').style.background = "#FF9F43";
+            paintQuizPane();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // CONFETTI CANVAS INTERACTIVITY ANIMATION
+        const canvasObj = document.getElementById('confetti-layer');
+        const canvasCtx = canvasObj.getContext('2d');
+        let elementsArr = [];
+
+        function setCanvasDimensions() {
+            canvasObj.width = window.innerWidth;
+            canvasObj.height = window.innerHeight;
+        }
+        window.addEventListener('resize', setCanvasDimensions);
+        setCanvasDimensions();
+
+        function sparkleSingleConfetti() {
+            for (let i = 0; i < 35; i++) {
+                elementsArr.push({
+                    posX: Math.random() * canvasObj.width,
+                    posY: canvasObj.height + 10,
+                    radius: Math.random() * 5 + 4,
+                    hue: `hsl(${Math.random() * 360}, 100%, 55%)`,
+                    velY: Math.random() * -7 - 6,
+                    velX: Math.random() * 6 - 3,
+                    spin: Math.random() * 360,
+                    spinSpeed: Math.random() * 5 - 2.5
+                });
+            }
+            renderConfettiLoop();
+        }
+
+        function cascadeFullConfetti() {
+            for (let i = 0; i < 160; i++) {
+                elementsArr.push({
+                    posX: Math.random() * canvasObj.width,
+                    posY: Math.random() * canvasObj.height - canvasObj.height,
+                    radius: Math.random() * 6 + 4,
+                    hue: `hsl(${Math.random() * 360}, 100%, 55%)`,
+                    velY: Math.random() * 5 + 3,
+                    velX: Math.random() * 4 - 2,
+                    spin: Math.random() * 360,
+                    spinSpeed: Math.random() * 6 - 3
+                });
+            }
+            renderConfettiLoop();
+        }
+
+        function renderConfettiLoop() {
+            canvasCtx.clearRect(0, 0, canvasObj.width, canvasObj.height);
+            let stateActive = false;
+
+            elementsArr.forEach(elem => {
+                canvasCtx.save();
+                canvasCtx.translate(elem.posX, elem.posY);
+                canvasCtx.rotate((elem.spin * Math.PI) / 180);
+                canvasCtx.fillStyle = elem.hue;
+                canvasCtx.fillRect(-elem.radius, -elem.radius, elem.radius * 2, elem.radius * 2);
+                canvasCtx.restore();
+
+                elem.posY += elem.velY;
+                elem.posX += elem.velX;
+                elem.spin += elem.spinSpeed;
+
+                if (elem.posY <= canvasObj.height + 20 && elem.posY >= -30 && elem.posX >= -20 && elem.posX <= canvasObj.width + 20) {
+                    stateActive = true;
+                }
+            });
+
+            if (stateActive) {
+                requestAnimationFrame(renderConfettiLoop);
+            } else {
+                canvasCtx.clearRect(0, 0, canvasObj.width, canvasObj.height);
+                elementsArr = [];
+            }
+        }
+
+        // BOOTSTRAP INITIALIZATION
+        window.onload = () => {
+            paintQuizPane();
+        };
+    </script>
+</body>
+</html>
